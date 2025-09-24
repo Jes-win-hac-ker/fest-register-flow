@@ -3,18 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tech Fest 2025 - Innovation Unleashed</title>
-    <meta name="description" content="Join the most innovative tech event of 2025. Register now for Tech Fest - March 15-17, 2025. Experience cutting-edge technology, networking, and innovation." />
-    <meta name="author" content="Lovable" />
+    <title>Vyvidh'25 - Innovation Unleashed</title>
+    <meta name="description" content="Join Vyvidh'25 - the most innovative tech event of September 2025. Register now for September 26-27, 2025. Experience cutting-edge technology, networking, and innovation." />
+    <meta name="author" content="Vyvidh'25 Team" />
 
-    <meta property="og:title" content="Tech Fest 2025 - Innovation Unleashed" />
-    <meta property="og:description" content="Join the most innovative tech event of 2025. Register now for Tech Fest - March 15-17, 2025. Experience cutting-edge technology, networking, and innovation." />
+    <meta property="og:title" content="Vyvidh'25 - Innovation Unleashed" />
+    <meta property="og:description" content="Join Vyvidh'25 - the most innovative tech event of September 2025. Register now for September 26-27, 2025. Experience cutting-edge technology, networking, and innovation." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:image" content="/tech-fest-hero.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@vyvidh25" />
+    <meta name="twitter:image" content="/tech-fest-hero.jpg" />
+    
+    <!-- GitHub Pages SPA routing fix -->
+    <script>
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
   </head>
 
   <body>
