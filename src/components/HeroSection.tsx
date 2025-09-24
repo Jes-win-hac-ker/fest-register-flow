@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import heroImage from "@/assets/tech-fest-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import techFestVideo from "/tech-fest-video.mp4";
 
 interface HeroSectionProps {
   onScrollToForm: () => void;
@@ -153,7 +154,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           style={{ 
             filter: 'none'
           }}
-          src="/tech-fest-video.mp4"
+          src={techFestVideo}
         >
           Your browser does not support the video tag.
         </video>
