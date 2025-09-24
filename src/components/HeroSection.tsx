@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import heroImage from "@/assets/tech-fest-hero.jpg";
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Play, VolumeX, Volume2 } from "lucide-react";
 import techFestVideo from "/tech-fest-video.mp4";
 
 interface HeroSectionProps {
@@ -12,6 +12,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -129,6 +130,14 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     onScrollToForm();
   };
 
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    
+    video.muted = !video.muted;
+    setIsMuted(video.muted);
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background Image Fallback - Hidden when video loads */}
@@ -167,6 +176,23 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
               className="flex items-center justify-center w-20 h-20 bg-white/20 hover:bg-white/30 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110"
             >
               <Play className="w-8 h-8 text-white ml-1" fill="white" />
+            </button>
+          </div>
+        )}
+
+        {/* Mute/Unmute Button */}
+        {!videoError && (
+          <div className="absolute top-6 right-6 z-30">
+            <button
+              onClick={toggleMute}
+              className="flex items-center justify-center w-12 h-12 bg-black/30 hover:bg-black/50 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110"
+              title={isMuted ? "Unmute video" : "Mute video"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white" />
+              )}
             </button>
           </div>
         )}
