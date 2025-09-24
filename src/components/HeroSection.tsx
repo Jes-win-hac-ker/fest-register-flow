@@ -63,6 +63,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           setShowPlayButton(true);
           // Try playing without sound
           video.muted = true;
+          setIsMuted(true);
           video.play().catch(() => {
             console.error('Manual play also failed');
             setShowPlayButton(true);
@@ -114,11 +115,17 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     const video = videoRef.current;
     if (!video) return;
     
-    video.muted = true;
+    video.muted = isMuted;
     video.play().then(() => {
       setShowPlayButton(false);
     }).catch((error) => {
       console.error('Manual play failed:', error);
+      // If play fails, try with muted
+      video.muted = true;
+      setIsMuted(true);
+      video.play().catch(() => {
+        console.error('Even muted play failed');
+      });
     });
   };
 
@@ -155,7 +162,6 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
         <video 
           ref={videoRef}
           autoPlay 
-          muted 
           loop 
           playsInline 
           preload="metadata"
@@ -164,6 +170,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
             filter: 'none'
           }}
           src={techFestVideo}
+          muted={isMuted}
         >
           Your browser does not support the video tag.
         </video>
