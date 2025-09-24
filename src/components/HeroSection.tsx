@@ -13,6 +13,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isToggling, setIsToggling] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -137,12 +138,43 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     onScrollToForm();
   };
 
-  const toggleMute = () => {
+  const toggleMute = async () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || isToggling) return;
+    
+    setIsToggling(true);
+    const wasPaused = video.paused;
+    const wasPlaying = !video.paused;
     
     video.muted = !video.muted;
     setIsMuted(video.muted);
+    
+    // On mobile, unmuting often pauses the video, so we need to play it again
+    if (!video.muted && (wasPaused || video.paused)) {
+      try {
+        await video.play();
+        console.log('Successfully playing with audio');
+      } catch (error) {
+        console.log('Play after unmute failed:', error);
+        // If play with sound fails, fall back to muted
+        video.muted = true;
+        setIsMuted(true);
+        try {
+          await video.play();
+        } catch (muteError) {
+          console.log('Even muted play failed after unmute attempt');
+        }
+      }
+    } else if (video.muted && wasPlaying && video.paused) {
+      // If video was playing and got paused during muting, restart it
+      try {
+        await video.play();
+      } catch (error) {
+        console.log('Restart after mute failed:', error);
+      }
+    }
+    
+    setIsToggling(false);
   };
 
   return (
@@ -192,10 +224,21 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           <div className="absolute top-6 right-6 z-30">
             <button
               onClick={toggleMute}
-              className="flex items-center justify-center w-12 h-12 bg-black/30 hover:bg-black/50 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110"
-              title={isMuted ? "Unmute video" : "Mute video"}
+              disabled={isToggling}
+              className={`flex items-center justify-center w-12 h-12 bg-black/30 hover:bg-black/50 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110 ${
+                isToggling ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+              title={
+                isToggling 
+                  ? "Loading..." 
+                  : isMuted 
+                    ? "Unmute video (tap to hear audio)" 
+                    : "Mute video"
+              }
             >
-              {isMuted ? (
+              {isToggling ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : isMuted ? (
                 <VolumeX className="w-5 h-5 text-white" />
               ) : (
                 <Volume2 className="w-5 h-5 text-white" />
