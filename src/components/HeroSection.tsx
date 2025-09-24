@@ -1,6 +1,7 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import heroImage from "@/assets/tech-fest-hero.jpg";
 import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 
 interface HeroSectionProps {
   onScrollToForm: () => void;
@@ -8,10 +9,48 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showPlayButton, setShowPlayButton] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Debug video loading
+    video.addEventListener('loadstart', () => console.log('Video loading started'));
+    video.addEventListener('loadeddata', () => console.log('Video data loaded'));
+    video.addEventListener('canplay', () => {
+      console.log('Video can start playing');
+      setShowPlayButton(false);
+    });
+    video.addEventListener('error', (e) => {
+      console.error('Video error:', e);
+      setVideoError(true);
+    });
+
+    video.addEventListener('play', () => setShowPlayButton(false));
+    video.addEventListener('pause', () => setShowPlayButton(true));
+
+    // Force video to play when it's ready
+    const tryPlayVideo = () => {
+      if (video.readyState >= 3) { // HAVE_FUTURE_DATA
+        video.play().catch((error) => {
+          console.error('Autoplay failed:', error);
+          setShowPlayButton(true);
+          // Try playing without sound
+          video.muted = true;
+          video.play().catch(() => {
+            console.error('Manual play also failed');
+            setShowPlayButton(true);
+          });
+        });
+      }
+    };
+
+
+
+    video.addEventListener('canplay', tryPlayVideo);
+    video.addEventListener('loadeddata', tryPlayVideo);
 
     const handleScroll = () => {
       const heroSection = video.closest('section');
@@ -27,16 +66,30 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
       }
     };
 
-    // Initial check
-    handleScroll();
+    // Initial check after a small delay
+    setTimeout(handleScroll, 500);
 
     // Add scroll listener
     window.addEventListener('scroll', handleScroll);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      video.removeEventListener('canplay', tryPlayVideo);
+      video.removeEventListener('loadeddata', tryPlayVideo);
     };
   }, []);
+
+  const handleManualPlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    
+    video.muted = true;
+    video.play().then(() => {
+      setShowPlayButton(false);
+    }).catch((error) => {
+      console.error('Manual play failed:', error);
+    });
+  };
 
   const handleRegisterClick = () => {
     // Pause video when user clicks register
@@ -75,18 +128,34 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           }}
           onError={() => {
             console.log('Video failed to load, showing fallback background');
+            setVideoError(true);
           }}
         >
           <source src="/tech-fest-video.mp4" type="video/mp4" />
           <source src="/tech-fest-video.webm" type="video/webm" />
-          {/* Fallback content when video fails to load */}
+        </video>
+
+        {/* Play Button Overlay */}
+        {(showPlayButton && !videoError) && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+            <button
+              onClick={handleManualPlay}
+              className="flex items-center justify-center w-20 h-20 bg-white/20 hover:bg-white/30 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110"
+            >
+              <Play className="w-8 h-8 text-white ml-1" fill="white" />
+            </button>
+          </div>
+        )}
+
+        {/* Fallback content when video fails to load */}
+        {videoError && (
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black flex items-center justify-center">
             <div className="text-center text-white/80">
               <h2 className="text-2xl font-bold mb-4">🎥 Video Loading...</h2>
               <p className="text-sm">Upload your video as tech-fest-video.mp4 in the public folder</p>
             </div>
           </div>
-        </video>
+        )}
       </div>
 
       {/* Content Overlay - Minimal */}
