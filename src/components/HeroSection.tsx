@@ -73,10 +73,19 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
             width: 'auto',
             height: 'auto'
           }}
+          onError={() => {
+            console.log('Video failed to load, showing fallback background');
+          }}
         >
           <source src="/tech-fest-video.mp4" type="video/mp4" />
           <source src="/tech-fest-video.webm" type="video/webm" />
-          Your browser does not support the video tag.
+          {/* Fallback content when video fails to load */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-black flex items-center justify-center">
+            <div className="text-center text-white/80">
+              <h2 className="text-2xl font-bold mb-4">🎥 Video Loading...</h2>
+              <p className="text-sm">Upload your video as tech-fest-video.mp4 in the public folder</p>
+            </div>
+          </div>
         </video>
       </div>
 
