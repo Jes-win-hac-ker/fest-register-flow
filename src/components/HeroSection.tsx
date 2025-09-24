@@ -17,19 +17,41 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     if (!video) return;
 
     // Debug video loading
-    video.addEventListener('loadstart', () => console.log('Video loading started'));
-    video.addEventListener('loadeddata', () => console.log('Video data loaded'));
+    video.addEventListener('loadstart', () => {
+      console.log('Video loading started');
+      setVideoError(false);
+    });
+    video.addEventListener('loadeddata', () => {
+      console.log('Video data loaded');
+      setVideoError(false);
+    });
     video.addEventListener('canplay', () => {
       console.log('Video can start playing');
       setShowPlayButton(false);
+      setVideoError(false);
     });
     video.addEventListener('error', (e) => {
       console.error('Video error:', e);
+      console.error('Video error details:', {
+        networkState: video?.networkState,
+        readyState: video?.readyState,
+        currentSrc: video?.currentSrc
+      });
       setVideoError(true);
     });
 
     video.addEventListener('play', () => setShowPlayButton(false));
-    video.addEventListener('pause', () => setShowPlayButton(true));
+    video.addEventListener('pause', () => {
+      // Only show play button if we're in the visible area
+      const heroSection = video.closest('section');
+      if (heroSection) {
+        const rect = heroSection.getBoundingClientRect();
+        const isVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+        if (isVisible) {
+          setShowPlayButton(true);
+        }
+      }
+    });
 
     // Force video to play when it's ready
     const tryPlayVideo = () => {
@@ -66,8 +88,11 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
       }
     };
 
+    // Force load the video
+    video.load();
+    
     // Initial check after a small delay
-    setTimeout(handleScroll, 500);
+    setTimeout(handleScroll, 1000);
 
     // Add scroll listener
     window.addEventListener('scroll', handleScroll);
@@ -119,16 +144,10 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           muted 
           loop 
           playsInline 
-          preload="auto"
+          preload="metadata"
           className="min-h-full min-w-full object-cover"
           style={{ 
-            filter: 'none',
-            width: 'auto',
-            height: 'auto'
-          }}
-          onError={() => {
-            console.log('Video failed to load, showing fallback background');
-            setVideoError(true);
+            filter: 'none'
           }}
         >
           <source src="/tech-fest-video.mp4" type="video/mp4" />
