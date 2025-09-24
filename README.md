@@ -1,73 +1,97 @@
-# Welcome to your Lovable project
+# Tech Fest 2025 - Landing Page
 
-## Project info
+A modern, responsive landing page for Tech Fest 2025 with registration functionality.
 
-**URL**: https://lovable.dev/projects/dc487869-7f4f-4337-ad18-5ae470a7bfdc
+## 🚀 Features
 
-## How can I edit this code?
+- **Full-screen Hero Section**: Ready for autoplay video background
+- **Registration Form**: Validated form with smooth animations
+- **Modern Design**: Gradient-based design system with tech aesthetics
+- **Responsive Layout**: Mobile-first responsive design
+- **SEO Optimized**: Proper meta tags and semantic HTML
 
-There are several ways of editing your application.
+## 🛠 Tech Stack
 
-**Use Lovable**
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **Tailwind CSS** for styling
+- **Shadcn/ui** for UI components
+- **Supabase Ready** for backend integration
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/dc487869-7f4f-4337-ad18-5ae470a7bfdc) and start prompting.
+## 📦 Deployment
 
-Changes made via Lovable will be committed automatically to this repo.
+This project is configured for automatic deployment to GitHub Pages via GitHub Actions.
 
-**Use your preferred IDE**
+### Quick Deploy to GitHub Pages
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Connect to GitHub** (via Lovable interface)
+2. **Push changes** to the main branch
+3. **Enable GitHub Pages** in repository settings
+4. Your site will be live at `https://yourusername.github.io/your-repo-name/`
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions and hosting alternatives.
 
-Follow these steps:
+## 🔧 Development
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-**Edit a file directly in GitHub**
+## 🎥 Adding Your Video
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Replace the placeholder in `src/components/HeroSection.tsx`:
 
-**Use GitHub Codespaces**
+```tsx
+<video autoPlay muted loop playsInline className="h-full w-full object-cover">
+  <source src="/your-video.mp4" type="video/mp4" />
+</video>
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔗 Backend Integration
 
-## What technologies are used for this project?
+Connect to Supabase for:
+- Registration data storage
+- Automated email confirmations
+- Payment link redirects
 
-This project is built with:
+[Setup Supabase Integration](https://docs.lovable.dev/integrations/supabase/)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📱 Project Structure
 
-## How can I deploy this project?
+```
+src/
+├── components/
+│   ├── ui/              # Shadcn UI components
+│   ├── HeroSection.tsx  # Main hero with video background
+│   └── RegistrationForm.tsx # Registration form with validation
+├── pages/
+│   └── Index.tsx        # Main landing page
+├── assets/              # Images and media files
+└── lib/                 # Utilities
+```
 
-Simply open [Lovable](https://lovable.dev/projects/dc487869-7f4f-4337-ad18-5ae470a7bfdc) and click on Share -> Publish.
+## 🎨 Customization
 
-## Can I connect a custom domain to my Lovable project?
+The design system is defined in:
+- `src/index.css` - Color tokens and gradients
+- `tailwind.config.ts` - Tailwind configuration
+- `src/components/ui/button.tsx` - Button variants
 
-Yes, you can!
+## 🌐 Environment Variables
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+For Supabase integration:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
