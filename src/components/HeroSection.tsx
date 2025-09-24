@@ -12,7 +12,7 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [showPlayButton, setShowPlayButton] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
 
   useEffect(() => {
@@ -59,18 +59,12 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     // Force video to play when it's ready
     const tryPlayVideo = () => {
       if (video.readyState >= 3) { // HAVE_FUTURE_DATA
-        // First try to play with audio (unmuted)
-        video.muted = false;
-        setIsMuted(false);
+        // Start muted for better autoplay compatibility
+        video.muted = true;
+        setIsMuted(true);
         video.play().catch((error) => {
-          console.log('Autoplay with audio failed, trying muted:', error);
-          // If autoplay with audio fails, fall back to muted
-          video.muted = true;
-          setIsMuted(true);
-          video.play().catch(() => {
-            console.error('Even muted autoplay failed');
-            setShowPlayButton(true);
-          });
+          console.error('Autoplay failed:', error);
+          setShowPlayButton(true);
         });
       }
     };
@@ -118,21 +112,12 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
     const video = videoRef.current;
     if (!video) return;
     
-    // Try to play with audio first
-    video.muted = false;
-    setIsMuted(false);
+    video.muted = true;
+    setIsMuted(true);
     video.play().then(() => {
       setShowPlayButton(false);
     }).catch((error) => {
-      console.log('Manual play with audio failed, trying muted:', error);
-      // If play with audio fails, fall back to muted
-      video.muted = true;
-      setIsMuted(true);
-      video.play().then(() => {
-        setShowPlayButton(false);
-      }).catch(() => {
-        console.error('Even muted play failed');
-      });
+      console.error('Manual play failed:', error);
     });
   };
 
