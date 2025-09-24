@@ -172,6 +172,21 @@ const RegistrationForm = () => {
                   </Select>
                 </div>
 
+                {/* Price Summary */}
+                <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {formData.tickets} ticket{formData.tickets > 1 ? 's' : ''} × ₹30 each
+                    </span>
+                    <span className="text-lg font-semibold text-purple-700 dark:text-purple-300">
+                      ₹{formData.tickets * 30}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-500">
+                    Pay via UPI or cash at venue after registration
+                  </div>
+                </div>
+
                 <Button
                   type="submit"
                   disabled={isSubmitting}
