@@ -73,6 +73,10 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
 
     video.addEventListener('canplay', tryPlayVideo);
     video.addEventListener('loadeddata', tryPlayVideo);
+    
+    // Force load the video
+    console.log('🎥 Video element created, attempting to load:', video.src);
+    video.load();
 
     const handleScroll = () => {
       const heroSection = video.closest('section');
@@ -149,9 +153,9 @@ const HeroSection = ({ onScrollToForm }: HeroSectionProps) => {
           style={{ 
             filter: 'none'
           }}
+          src="/tech-fest-video.mp4"
         >
-          <source src="/tech-fest-video.mp4" type="video/mp4" />
-          <source src="/tech-fest-video.webm" type="video/webm" />
+          Your browser does not support the video tag.
         </video>
 
         {/* Play Button Overlay */}
