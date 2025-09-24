@@ -1,6 +1,6 @@
-# Tech Fest 2025 - Landing Page
+# Vyvidh'25 - Landing Page
 
-A modern, responsive landing page for Tech Fest 2025 with registration functionality.
+A modern, responsive landing page for Vyvidh'25 with registration functionality.
 
 ## 🚀 Features
 

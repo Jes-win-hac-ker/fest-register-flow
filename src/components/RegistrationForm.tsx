@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { insertRegistration, supabase } from "@/lib/supabase";
 
 const registrationSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
@@ -37,12 +38,26 @@ const RegistrationForm = () => {
       
       setIsSubmitting(true);
       
-      // TODO: Replace with Supabase integration
-      // This is where you'll add the Supabase database insertion
-      console.log("Registration data:", validatedData);
+      // Insert registration into Supabase
+      const registration = await insertRegistration(validatedData);
+      console.log("Registration saved:", registration);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Send confirmation email
+      try {
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-confirmation-email', {
+          body: validatedData
+        });
+        
+        if (emailError) {
+          console.error('Email sending failed:', emailError);
+          // Continue with success message even if email fails
+        } else {
+          console.log('Confirmation email sent:', emailData);
+        }
+      } catch (emailError) {
+        console.error('Email function error:', emailError);
+        // Continue with success message even if email fails
+      }
       
       toast({
         title: "Registration Successful!",
@@ -74,6 +89,18 @@ const RegistrationForm = () => {
   return (
     <section id="registration" className="min-h-screen bg-background py-20">
       <div className="container mx-auto px-4">
+        {/* Event Title and Date */}
+        <div className="text-center mb-12">
+          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
+            <span className="gradient-primary bg-clip-text text-transparent">
+              Vyvidh'25
+            </span>
+          </h1>
+          <p className="text-xl text-foreground/80 md:text-2xl">
+            26th to 27th September, 2025
+          </p>
+        </div>
+        
         <div className="mx-auto max-w-md">
           <Card className="gradient-card border-border/50 backdrop-blur-sm">
             <CardHeader className="text-center">
@@ -81,7 +108,7 @@ const RegistrationForm = () => {
                 Register Now
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                Secure your spot at the most innovative tech event of the year
+                Secure your spot at Vyvidh'25 - the most innovative tech event of the year
               </CardDescription>
             </CardHeader>
             

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import HeroSection from "@/components/HeroSection";
 import RegistrationForm from "@/components/RegistrationForm";
+import VideoCredits from "@/components/VideoCredits";
 
 const Index = () => {
   const formRef = useRef<HTMLDivElement>(null);
@@ -15,6 +16,7 @@ const Index = () => {
       <div ref={formRef}>
         <RegistrationForm />
       </div>
+      <VideoCredits />
     </div>
   );
 };
